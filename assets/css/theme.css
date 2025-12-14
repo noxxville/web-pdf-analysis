@@ -43,6 +43,7 @@
                 border-color .3s ease,
                 box-shadow .3s ease,
                 transform .25s ease;
+  --footer-height: 92px; /* ggf. feinjustieren: 88–104px */
 }
 
 /* =========================================================
