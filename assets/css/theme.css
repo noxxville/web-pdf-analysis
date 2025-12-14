@@ -1,0 +1,90 @@
+/* =========================================================
+   Theme Tokens – Dark (Default)
+========================================================= */
+:root{
+  /* Core */
+  --bg: #0b1220;
+  --panel: #111a2e;
+  --card: #0f172a;
+  --text: #e6edf7;
+  --muted: #8aa1c4;
+  --border: #1f2b46;
+
+  /* Accent */
+  --accent: #78b4ff;
+  --accent-glow: rgba(120,180,255,0.45);
+
+  /* Status */
+  --good: #22c55e;
+  --warn: #facc15;
+  --bad:  #ef4444;
+
+  /* Buttons / Inputs */
+  --input-bg: rgba(255,255,255,0.03);
+
+  /* Header (Sticky Glass) */
+  --header-bg: rgba(11,18,32,0.70);
+  --header-border: rgba(255,255,255,0.06);
+  --header-shadow: 0 12px 34px rgba(0,0,0,0.28);
+  --header-highlight: rgba(120,180,255,0.14);
+
+  /* Footer */
+  --footer-bg: rgba(0,0,0,0.22);
+  --footer-border: rgba(255,255,255,0.06);
+
+  /* Icons */
+  --icon-color: #e6edf7;
+  --icon-hover: #78b4ff;
+  --icon-glow: rgba(120,180,255,0.55);
+
+  /* Effects */
+  --transition: background-color .3s ease,
+                color .3s ease,
+                border-color .3s ease,
+                box-shadow .3s ease,
+                transform .25s ease;
+}
+
+/* =========================================================
+   Theme Tokens – Light Mode
+========================================================= */
+[data-theme="light"]{
+  --bg: #f8fafc;
+  --panel: #ffffff;
+  --card: #f1f5f9;
+  --text: #0b1220;
+  --muted: #475569;
+  --border: #cbd5e1;
+
+  --accent: #78b4ff;
+  --accent-glow: rgba(120,180,255,0.35);
+
+  /* Header */
+  --header-bg: rgba(255,255,255,0.86);
+  --header-border: rgba(11,18,32,0.14);
+  --header-shadow: 0 10px 26px rgba(2,6,23,0.10);
+  --header-highlight: rgba(120,180,255,0.12);
+
+  /* Footer */
+  --footer-bg: rgba(255,255,255,0.90);
+  --footer-border: rgba(11,18,32,0.14);
+
+  /* Icons */
+  --icon-color: #0b1220;
+  --icon-hover: #78b4ff;
+  --icon-glow: rgba(120,180,255,0.40);
+}
+
+/* =========================================================
+   Global Focus & Selection
+========================================================= */
+:focus-visible{
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(120,180,255,0.35);
+  border-radius: 8px;
+}
+
+::selection{
+  background: rgba(120,180,255,0.35);
+  color: #081225;
+}

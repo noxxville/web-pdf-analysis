@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>PDF QuickCheck – Statische Analyse</title>
+  <meta name="description" content="PDF QuickCheck: Offline PDF-Analyse im Browser. Erkennt gefährliche Marker, zeigt Metadaten, URLs und Risiko-Score – ohne Uploads." />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://www.example.com/pdf-quickcheck/" />
+
+  <!-- Open Graph (optional, hilft SEO bei Shares) -->
+  <meta property="og:title" content="PDF QuickCheck – Statische Analyse" />
+  <meta property="og:description" content="Offline PDF-Analyse im Browser: Marker, Metadaten, URLs, Risiko-Score. Keine Uploads." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.example.com/pdf-quickcheck/" />
+  <meta property="og:image" content="https://www.example.com/assets/img/logo-nh.png" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg" />
+
+  <!-- Local Fonts -->
+  <link rel="preload" href="assets/fonts/inter/inter-v20-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/inter/inter-v20-latin-600.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/montserrat/montserrat-v31-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/montserrat/montserrat-v31-latin-600.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="assets/fonts/inter/inter.css">
+  <link rel="stylesheet" href="assets/fonts/montserrat/montserrat.css">
+
+  <!-- Theme Tokens + Styles -->
+  <link rel="stylesheet" href="assets/css/theme.css">
+  <link rel="stylesheet" href="assets/css/style.css" />
+
+  <!-- App -->
+  <script defer src="assets/js/app.js"></script>
+</head>
+
+<body>
+  <!-- Header -->
+  <header>
+    <div class="header-inner">
+      <div class="header-left">
+        <a class="brand" href="#top" aria-label="Start">
+          <img class="brand-logo" src="assets/img/logo-nh-glow.svg" alt="NH Logo" />
+        </a>
+
+        <div class="brand-text">
+          <h1>PDF QuickCheck – Statische Analyse</h1>
+          <div class="sub">
+            Erkennt gefährliche PDF-Marker, zeigt Metadaten und Risiko-Score, komplett offline.
+          </div>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <button id="themeToggle" class="btn secondary" type="button">Theme: Light</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main id="top">
+    <div class="grid">
+      <!-- Upload -->
+      <section class="card">
+        <h2>1) PDF hochladen</h2>
+        <div class="body">
+          <div id="drop" class="drop" tabindex="0" aria-label="PDF Upload Dropzone">
+            <div style="margin-bottom:10px">Datei hierher ziehen oder auswählen</div>
+
+            <button class="btn" id="chooseBtn" type="button">PDF auswählen</button>
+            <input type="file" id="fileInput" accept="application/pdf,.pdf" class="hidden" />
+
+            <div class="foot">Analyse erfolgt vollständig im Browser, keine Uploads.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Actions -->
+      <section class="card">
+        <h2>Quick Actions</h2>
+        <div class="body flex">
+          <button class="btn secondary" id="downloadJson" type="button" disabled>JSON speichern</button>
+          <button class="btn secondary" id="downloadCsv" type="button" disabled>CSV speichern</button>
+          <button class="btn secondary" id="downloadPdf" type="button" disabled>PDF speichern</button>
+          <button class="btn secondary" id="resetBtn" type="button" disabled>Zurücksetzen</button>
+        </div>
+        <div class="body" style="padding-top:0">
+          <div class="foot">
+            Tipp: Für eine realistische Erkennung sind FlateDecode-Streams (komprimierte Inhalte) relevant.
+            Der QuickCheck versucht diese offline zu entpacken, falls der Browser es unterstützt.
+          </div>
+        </div>
+      </section>
+
+      <!-- Results -->
+      <section class="card full">
+        <h2>2) Ergebnisse</h2>
+        <div class="body">
+          <div id="fileInfo" class="list"></div>
+          <div id="riskScore" class="score"></div>
+
+          <h3 class="h3">Indikatoren</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Check</th>
+                <th>Ergebnis</th>
+                <th>Hinweis</th>
+              </tr>
+            </thead>
+            <tbody id="indicators"></tbody>
+          </table>
+
+          <h3 class="h3">Gefundene URLs &amp; Mailto</h3>
+          <div id="urls" class="urls list"></div>
+
+          <h3 class="h3">Roh-Treffer (Kontext)</h3>
+          <pre id="context" class="mono context"></pre>
+
+          <div class="foot">
+            Hinweis: Inhalte in komprimierten Streams (<code>FlateDecode</code> etc.) sind u. U. nicht sichtbar.
+            Für Tiefenanalyse zusätzlich <span class="kbd">pdfid.py</span> / <span class="kbd">pdf-parser.py</span> oder eine Sandbox nutzen.
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="social-icons" aria-label="Social Links">
+      <!-- URLs kannst du später korrigieren -->
+      <a href="https://github.com/" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 .5C5.73.5.75 5.7.75 12.1c0 5.1 3.2 9.4 7.6 10.9.6.1.8-.3.8-.6v-2.2c-3.1.7-3.8-1.3-3.8-1.3-.5-1.3-1.2-1.7-1.2-1.7-1-.7.1-.7.1-.7 1.1.1 1.7 1.2 1.7 1.2 1 .1.8 2.6 3.3 1.9.1-.8.4-1.3.7-1.6-2.5-.3-5.1-1.3-5.1-5.7 0-1.3.4-2.3 1.1-3.1-.1-.3-.5-1.4.1-2.9 0 0 .9-.3 3 .1.9-.3 1.9-.4 2.9-.4 1 0 2 .1 2.9.4 2.1-.4 3-.1 3-.1.6 1.5.2 2.6.1 2.9.7.8 1.1 1.8 1.1 3.1 0 4.4-2.6 5.4-5.1 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.4-1.5 7.6-5.8 7.6-10.9C23.25 5.7 18.27.5 12 .5z"/>
+        </svg>
+      </a>
+
+      <a href="https://www.linkedin.com/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+        <svg viewBox="0 0 448 512" aria-hidden="true">
+          <path d="M100.28 448H7.4V148.9h92.88zM53.79 108.1C24.09 108.1 0 83.5 0 53.8a53.79 53.79 0 0 1 107.58 0c0 29.7-24.1 54.3-53.79 54.3zM447.9 448h-92.68V302.4c0-34.7-.7-79.2-48.29-79.2-48.29 0-55.69 37.7-55.69 76.7V448h-92.78V148.9h89.08v40.8h1.3c12.4-23.5 42.69-48.3 87.88-48.3 94 0 111.28 61.9 111.28 142.3V448z"/>
+        </svg>
+      </a>
+
+      <a href="mailto:mail@example.com" aria-label="E-Mail">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M2 6.5A2.5 2.5 0 0 1 4.5 4h15A2.5 2.5 0 0 1 22 6.5v11A2.5 2.5 0 0 1 19.5 20h-15A2.5 2.5 0 0 1 2 17.5v-11Zm2.1-.5 7.4 5.1c.3.2.7.2 1 0L19.9 6H4.1Zm15.9 2.3-6.7 4.6c-1 .7-2.4.7-3.4 0L3.2 8.3V17.5c0 .7.6 1.5 1.3 1.5h15c.7 0 1.5-.8 1.5-1.5V8.3Z"/>
+        </svg>
+      </a>
+
+      <a href="#" class="nocookies-tooltip" aria-label="No Cookies" data-nocookies="true">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 2a10 10 0 1 0 10 10c0-.3 0-.6-.1-.9-1.2.2-2.4-.3-3.2-1.1-.9-.9-1.3-2.2-1.1-3.4-.3 0-.6.1-.9.1-1.1 0-2.2-.4-3-1.2-.8-.8-1.2-1.9-1.2-3.1 0-.2 0-.3 0-.5C12.6 2 12.3 2 12 2Zm-3.5 9A1.5 1.5 0 1 1 7 12.5 1.5 1.5 0 0 1 8.5 11Zm7 2A1.5 1.5 0 1 1 14 14.5 1.5 1.5 0 0 1 15.5 13ZM10 15.5A1.5 1.5 0 1 1 8.5 17 1.5 1.5 0 0 1 10 15.5Z"/>
+        </svg>
+      </a>
+    </div>
+
+    <div class="footer-links" aria-label="Rechtliches">
+      <a href="#" data-legal="imprint">Impressum</a>
+      <span class="footer-sep">•</span>
+      <a href="#" data-legal="privacy">Datenschutz</a>
+    </div>
+
+    <p>© <span id="year"></span> Nils Höppner · PDF QuickCheck</p>
+  </footer>
+
+  <!-- Legal Modal -->
+  <div id="legalOverlay" class="legal-overlay hidden" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="legal-modal" role="document">
+      <div class="legal-head">
+        <h2 id="legalTitle">Impressum</h2>
+        <button id="legalClose" class="btn secondary" type="button">Schließen</button>
+      </div>
+      <pre id="legalBody" class="legal-body"></pre>
+    </div>
+  </div>
+
+  <!-- Header: compact on scroll -->
+  <script>
+    (function(){
+      const THRESHOLD = 18;
+      const onScroll = () => {
+        if (window.scrollY > THRESHOLD) document.body.classList.add('header-compact');
+        else document.body.classList.remove('header-compact');
+      };
+      onScroll();
+      window.addEventListener('scroll', onScroll, { passive: true });
+    })();
+  </script>
+</body>
+</html>

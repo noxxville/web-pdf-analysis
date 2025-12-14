@@ -1,0 +1,543 @@
+/* =========================================================
+   Base / Reset
+========================================================= */
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+
+body{
+  margin:0;
+  background: var(--bg);
+  color: var(--text);
+  font: 15px/1.45 Inter, system-ui, Segoe UI, Roboto, Ubuntu, "Helvetica Neue", Arial, sans-serif;
+  transition: var(--transition);
+  padding-bottom: 108px; /* Platz für fixed Footer */
+}
+
+/* =========================================================
+   Header (zentriert + sticky + hochwertiges Glas)
+========================================================= */
+header{
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+
+  /* Glass */
+  background: var(--header-bg);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+
+  /* Hairline + Shadow */
+  border-bottom: 1px solid var(--header-border);
+  box-shadow: var(--header-shadow);
+
+  /* Dezent: Accent-Highlight im oberen Bereich */
+  background-image: linear-gradient(
+    180deg,
+    var(--header-highlight),
+    transparent 70%
+  );
+  background-blend-mode: screen;
+}
+
+header::after{
+  content:"";
+  position:absolute;
+  left:0; right:0; bottom:-1px;
+  height:1px;
+  background: linear-gradient(90deg, transparent, rgba(120,180,255,0.18), transparent);
+  pointer-events:none;
+}
+
+.header-inner{
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 20px 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+/* Scroll-Compact Mode (wird per JS gesetzt) */
+body.header-compact .header-inner{
+  padding-top: 14px;
+  padding-bottom: 14px;
+}
+
+.header-left{
+  display:flex;
+  align-items:center;
+  gap: 14px;
+  min-width: 0;
+}
+
+/* Pixelkorrektur: Logo minimal nach unten für optische Mitte */
+.brand{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:44px;
+  height:44px;
+  border-radius:14px;
+  background: rgba(255,255,255,.06);
+  border: 1px solid var(--border);
+  overflow:hidden;
+  flex: 0 0 auto;
+  transform: translateY(1px);
+}
+
+[data-theme="light"] .brand{
+  background: rgba(11,18,32,0.04);
+}
+
+.brand-logo{
+  width:34px;
+  height:34px;
+  display:block;
+}
+
+/* Textblock: saubere Vertikal-Ausrichtung + Typo */
+.brand-text{
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+h1{
+  margin:0;
+  font-size:22px;
+  line-height: 1.12;
+  font-family: Montserrat, Inter, system-ui, Segoe UI, Roboto, Arial, sans-serif;
+  font-weight:600;
+  letter-spacing: .2px;
+}
+
+.sub{
+  color: var(--muted);
+  margin-top: 6px;
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+/* Scroll-Compact: Titel/Sub etwas kleiner */
+body.header-compact h1{
+  font-size: 19px;
+}
+
+body.header-compact .sub{
+  margin-top: 4px;
+  font-size: 12px;
+}
+
+.header-actions{
+  display:flex;
+  align-items:center;
+  gap: 10px;
+}
+
+/* Mobile */
+@media (max-width: 640px){
+  .header-inner{ padding: 16px 16px; }
+  body.header-compact .header-inner{ padding: 12px 16px; }
+  h1{ font-size: 18px; }
+  .sub{ font-size: 12px; margin-top: 4px; }
+}
+
+/* =========================================================
+   Layout
+========================================================= */
+main{
+  padding: 20px;
+  max-width: 1100px;
+  margin: auto;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns: 1.1fr .9fr;
+  gap: 16px;
+}
+
+@media (max-width: 980px){
+  .grid{ grid-template-columns: 1fr; }
+}
+
+/* =========================================================
+   Cards
+========================================================= */
+.card{
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.25);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  overflow:hidden;
+}
+
+.card.full{ grid-column: 1 / -1; }
+
+.card h2{
+  font-size: 16px;
+  margin: 0;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(180deg, rgba(255,255,255,.02), transparent);
+  font-family: Montserrat, Inter, system-ui, Segoe UI, Roboto, Arial, sans-serif;
+  font-weight: 600;
+}
+
+.card .body{ padding: 16px; }
+
+.h3{
+  margin: 14px 0 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+/* =========================================================
+   Buttons
+========================================================= */
+.btn{
+  display:inline-flex;
+  gap:8px;
+  align-items:center;
+  background: var(--accent);
+  color: #081225;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.btn:hover{
+  box-shadow: 0 0 22px var(--accent-glow);
+  transform: translateY(-1px);
+}
+
+.btn:active{ transform: translateY(0); }
+
+.btn.secondary{
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.btn.secondary:hover{
+  border-color: var(--accent);
+  box-shadow: 0 0 18px var(--accent-glow);
+}
+
+/* =========================================================
+   Dropzone
+========================================================= */
+.drop{
+  border: 1.8px dashed var(--accent);
+  border-radius: 12px;
+  padding: 20px;
+  text-align:center;
+  color: var(--muted);
+  background: rgba(120,180,255,.08);
+  transition: .2s;
+  outline: none;
+}
+
+.drop.drag{ background: rgba(120,180,255,.16); }
+
+/* =========================================================
+   Tables
+========================================================= */
+table{ width:100%; border-collapse: collapse; }
+
+th, td{
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+th{
+  color: var(--muted);
+  text-align: left;
+  font-weight: 600;
+}
+
+/* =========================================================
+   Code / Context
+========================================================= */
+code, pre{
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+}
+
+.mono{
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+}
+
+.context{
+  white-space: pre-wrap;
+  max-height: 600px;
+  overflow: auto;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px;
+  background: var(--card);
+}
+
+/* =========================================================
+   Helpers
+========================================================= */
+.list{ display:flex; flex-direction: column; gap: 6px; }
+.flex{ display:flex; gap: 10px; flex-wrap: wrap; }
+.hidden{ display:none; }
+.muted{ color: var(--muted); }
+
+.urls a{ color: var(--accent); text-decoration: none; }
+.urls a:hover{ text-decoration: underline; }
+
+.wrap{ word-break: break-all; }
+
+.score{
+  font-size: 18px;
+  font-weight: 700;
+  margin-top: 10px;
+}
+
+.foot{
+  color: var(--muted);
+  font-size: 12px;
+  margin-top: 10px;
+}
+
+.kbd{
+  border: 1px solid var(--border);
+  background: var(--card);
+  border-radius: 6px;
+  padding: 2px 6px;
+}
+
+/* Status Pills */
+.pill{
+  display:inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.ok{
+  background: rgba(34,197,94,.15);
+  color: #86efac;
+  border: 1px solid rgba(34,197,94,.35);
+}
+
+.warn{
+  background: rgba(250,204,21,.15);
+  color: #fde68a;
+  border: 1px solid rgba(250,204,21,.35);
+}
+
+.bad{
+  background: rgba(239,68,68,.15);
+  color: #fecaca;
+  border: 1px solid rgba(239,68,68,.35);
+}
+
+/* =========================================================
+   Footer (Fixed) – Suite Theme
+========================================================= */
+footer{
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 0.9rem 1.6rem;
+  text-align: center;
+
+  display:flex;
+  flex-direction: column;
+  align-items:center;
+  gap: 0.4rem;
+
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  background: var(--footer-bg);
+  border-top: 1px solid var(--footer-border);
+
+  z-index: 999;
+}
+
+footer p{
+  margin: 0;
+  font-size: 0.8rem;
+  opacity: 0.65;
+  color: var(--muted);
+}
+
+/* Footer links */
+.footer-links{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap: 10px;
+  margin-top: 2px;
+  line-height: 1.1;
+}
+
+.footer-links a{
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.85rem;
+  opacity: 0.95;
+}
+
+.footer-links a:hover{
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+.footer-sep{
+  color: var(--muted);
+  opacity: 0.6;
+  user-select: none;
+}
+
+/* Social Icons */
+.social-icons{
+  display:flex;
+  justify-content:center;
+  gap: 1.4rem;
+}
+
+.social-icons a{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.social-icons svg{
+  width: 26px;
+  height: 26px;
+  fill: var(--icon-color);
+  opacity: 0.8;
+  transition: opacity .25s ease, fill .25s ease, transform .25s ease, filter .25s ease;
+}
+
+.social-icons svg:hover{
+  opacity: 1;
+  fill: var(--icon-hover);
+  transform: translateY(-3px);
+  filter: drop-shadow(0 0 10px var(--icon-glow));
+}
+
+/* No-Cookies Tooltip */
+.nocookies-tooltip{ position: relative; }
+
+.nocookies-tooltip:hover::after{
+  content: "Diese Webseite verwendet keine Cookies";
+  position: absolute;
+  bottom: 130%;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.4rem 0.7rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  white-space: nowrap;
+
+  background: rgba(0,0,0,0.85);
+  color: #fff;
+  border: 1px solid var(--border);
+
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+[data-theme="light"] .nocookies-tooltip:hover::after{
+  background: rgba(255,255,255,0.92);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.nocookies-tooltip:hover::before{
+  content:"";
+  position:absolute;
+  bottom: 120%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 6px;
+  border-style: solid;
+  border-color: rgba(0,0,0,0.85) transparent transparent transparent;
+}
+
+[data-theme="light"] .nocookies-tooltip:hover::before{
+  border-color: rgba(255,255,255,0.92) transparent transparent transparent;
+}
+
+/* =========================================================
+   Legal Modal (Impressum / Datenschutz)
+========================================================= */
+.legal-overlay{
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+
+  background: rgba(0,0,0,0.60);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+[data-theme="light"] .legal-overlay{
+  background: rgba(0,0,0,0.35);
+}
+
+.legal-modal{
+  width: min(920px, 100%);
+  border-radius: 18px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.45);
+  overflow: hidden;
+}
+
+.legal-head{
+  display:flex;
+  align-items:center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(180deg, rgba(255,255,255,0.03), transparent);
+}
+
+.legal-head h2{
+  margin: 0;
+  font-size: 16px;
+  font-family: Montserrat, Inter, system-ui, Segoe UI, Roboto, Arial, sans-serif;
+  font-weight: 600;
+}
+
+.legal-body{
+  margin: 0;
+  padding: 16px;
+  white-space: pre-wrap;
+  max-height: min(70vh, 720px);
+  overflow: auto;
+  color: var(--text);
+  background: var(--card);
+}
+
+/* Modal visibility – robust */
+.legal-overlay[aria-hidden="true"]{ display: none !important; }
+.legal-overlay[aria-hidden="false"]{ display: flex !important; }
+.legal-overlay.hidden{ display: none !important; }
+.hidden{ display: none !important; }
